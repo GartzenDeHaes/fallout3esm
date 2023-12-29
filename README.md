@@ -2,7 +2,7 @@
 
 ## Fallout 3 Quests and Dialog
 
-Fallout 3 uses the Marrowind quest (QUST), topic (DIAL), and response (INFO) records to generate branching dialog. When the player interacts with an NPC in Marrowind, a list of topics is displayed in a dialog box. A response for the NPC is displayed when the player clicks on a topic. The list of topics is controlled by the currently active quests. Not all active quests are visible to the player in their journal though, such as the WELCOME quest that controlls greeting topics. Topics and responses are further filtered by conditions (CTDA) and have a display priority. In Fallout 3, only the highest priority active topic is used and the highest 4(?) responses. 
+Fallout 3 uses the Marrowind quest (QUST), topic (DIAL), and response (INFO) records to generate branching dialog. When the player interacts with an NPC in Marrowind, a list of topics is displayed in a dialog box. A response for the NPC is displayed when the player clicks on a topic. The list of topics is controlled by the currently active quests. Not all active quests are visible to the player in their journal though, such as the WELCOME quest that controls greeting topics. Topics and responses are further filtered by conditions (CTDA) and a display priority. In Fallout 3, only the highest priority active topic is used and the highest 4(?) responses. 
 
 In Marrowind, choices can be displayed to the player by the NPC response (INFO) by using the Choice() function in a script attached to the INFO record. The results of the player selecting a choice are implemented by the script, which might activate a quest or set some variables. The Choice() function is not used in Fallout 3.
 
