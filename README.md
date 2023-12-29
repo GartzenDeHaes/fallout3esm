@@ -26,15 +26,23 @@ All topics (DIAL) are assocated with a quest record. For active quests, topics a
 ## Documentation
 
 [Base data types](https://en.uesp.net/wiki/Skyrim_Mod:File_Format_Conventions)
+
 [xEdit Fallout 3 Record Docs](https://tes5edit.github.io/fopdoc/Fallout3/Records.html)
+
 [Skyrim Reocrd Docs](https://en.uesp.net/wiki/Skyrim_Mod:File_Format_Conventions)
+
 [Oblivion Record Docs](https://en.uesp.net/wiki/Oblivion_Mod:Mod_File_Format)
+
 [Morrowind Record Docs](https://en.uesp.net/wiki/Morrowind_Mod:Mod_File_Format)
 
 ## Code Liberally Reused From
 
 [Fallout.NET](https://github.com/CaptainSaveACode/Fallout.NET)
+
 [MarrowindUnity](https://github.com/arycama/MorrowindUnity)
+
 [TES3Unity](https://github.com/demonixis/TES3Unity)
+
 [DaggerfallUnity](https://github.com/Interkarma/daggerfall-unity)
+
 
