@@ -1,0 +1,23 @@
+﻿using Fallout.NET.Core;
+
+using System;
+
+namespace Fallout.NET.TES4.SubRecords
+{
+	public sealed class FormID : SubRecord
+	{
+		public int Value;
+
+		public override void Deserialize(BetterReader reader, string name)
+		{
+			base.Deserialize(reader, name);
+			UnityEngine.Debug.Assert(Size == 4);
+			Value = reader.ReadInt32();
+		}
+
+		public override string ToString()
+		{
+			return Value.ToString("X");
+		}
+	}
+}

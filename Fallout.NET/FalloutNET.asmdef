@@ -1,0 +1,16 @@
+{
+    "name": "FalloutNET",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5139ce4d1d2947847a3ccaa9cff50991"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
