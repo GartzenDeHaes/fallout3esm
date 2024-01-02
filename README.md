@@ -2,7 +2,15 @@
 
 ### About the QUST Record
 
-Quest records are used as event driven state machines that are used for many features other than quests. There are no state transitions though and states are activated and deactivated through settings, conditions, and scripting functions. Besides quests, the most common use of the QUST record is to activate groups of dialogue and barks. For example, the "Generic" quest activates dialogue for a wide variety of unnamed NPC's such as "FemaleGenericGhoul" and "MaleGroupRaider".
+Quest records are used as event driven state machines that drive many features other than quests. There are no state transitions though and states are activated and deactivated through settings, conditions, and scripting functions. Besides quests, the most common use of the QUST record is to activate groups of dialogue and barks. 
+
+For example, the "Generic" quest activates dialogue for a wide variety of unnamed NPC's such as "FemaleGenericGhoul" and "MaleGroupRaider". The "Generic" quest also implements PERK effects with scripts attached to a stage for each PERK. For example,
+```
+; Triggered by the Animal Friend perk, rank 1
+; make the player friends with everybody in the AnimalFriendFaction
+SetAlly AnimalFriendFaction PlayerFaction 1 1
+```
+#### Quest Conditions
 
 Quest activation condition are reevaluated after in-game events as specified by the "Run On" field. Options are:
 - Subject (Player selected use on object or NPC)
@@ -10,10 +18,13 @@ Quest activation condition are reevaluated after in-game events as specified by 
 - Reference (?)
 - Combat Target (?)
 - Linked Reference (?)
+#### Stages
 
 Some states have stages, or sub-states, that can be activated in any order. These are used to track quest events and many other things such as holding PERK effect scripts. When all stages are complete, a script event in the parent quest is triggered (need to verify). Quest (states) can also be set as completed (inactive) by script functions.
 
-### Fallout 3 Quests and Dialog
+In quests used as dialogue activators, stages are used add dialogue options for PERK's, stats, and activations of other quests(?). For example, in the "Generic" quest, "FemaleGenericGhoul" condi
+
+### Fallout 3 Quests and Dialogue
 
 Fallout 3 uses the Marrowind quest (QUST), topic (DIAL), and response (INFO) records to generate branching dialog. When the player interacts with an NPC in Marrowind, a list of topics is displayed in a dialog box. A response for the NPC is displayed when the player clicks on a topic. The list of topics is controlled by the currently active quests. Not all active quests are visible to the player in their journal though, such as the WELCOME quest that controls greeting topics. Topics and responses are further filtered by conditions (CTDA) and a display priority. In Fallout 3, only the highest priority active topic is used and the highest 4(?) responses. 
 
