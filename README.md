@@ -1,6 +1,19 @@
 # Fallout 3 ESM Reader
 
-## Fallout 3 Quests and Dialog
+### About the QUST Record
+
+Quest records are used as event driven state machines that are used for many features other than quests. There are no state transitions though and states are activated and deactivated through settings, conditions, and scripting functions. Besides quests, the most common use of the QUST record is to activate groups of dialogue and barks. For example, the "Generic" quest activates dialogue for a wide variety of unnamed NPC's such as "FemaleGenericGhoul" and "MaleGroupRaider".
+
+Quest activation condition are reevaluated after in-game events as specified by the "Run On" field. Options are:
+- Subject (Player selected use on object or NPC)
+- Target (?)
+- Reference (?)
+- Combat Target (?)
+- Linked Reference (?)
+
+Some states have stages, or sub-states, that can be activated in any order. These are used to track quest events and many other things such as holding PERK effect scripts. When all stages are complete, a script event in the parent quest is triggered (need to verify). Quest (states) can also be set as completed (inactive) by script functions.
+
+### Fallout 3 Quests and Dialog
 
 Fallout 3 uses the Marrowind quest (QUST), topic (DIAL), and response (INFO) records to generate branching dialog. When the player interacts with an NPC in Marrowind, a list of topics is displayed in a dialog box. A response for the NPC is displayed when the player clicks on a topic. The list of topics is controlled by the currently active quests. Not all active quests are visible to the player in their journal though, such as the WELCOME quest that controls greeting topics. Topics and responses are further filtered by conditions (CTDA) and a display priority. In Fallout 3, only the highest priority active topic is used and the highest 4(?) responses. 
 
@@ -23,7 +36,7 @@ Quests have an optional list of quest stages and objectives that are displayed i
 
 All topics (DIAL) are assocated with a quest record. For active quests, topics are optionally filtered by a set of conditions (CTDA) and an NPC ID.
 
-## Documentation
+### Documentation
 
 [Base data types](https://en.uesp.net/wiki/Skyrim_Mod:File_Format_Conventions)
 
@@ -35,7 +48,7 @@ All topics (DIAL) are assocated with a quest record. For active quests, topics a
 
 [Morrowind Record Docs](https://en.uesp.net/wiki/Morrowind_Mod:Mod_File_Format)
 
-## Code Liberally Reused From
+### Code Liberally Reused From
 
 [Fallout.NET](https://github.com/CaptainSaveACode/Fallout.NET)
 
