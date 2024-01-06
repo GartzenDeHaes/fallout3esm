@@ -31,31 +31,40 @@ namespace Fallout.NET.TES4
 		uint _groupSize;
 		byte[] _label;
 		GroupType _groupType;
-		ushort _stamp;
-		ushort _unknow;
-		ushort _version;
-		ushort _unknow2;
-		Dictionary<GroupType, List<Group>> _subGroups;
-		Dictionary<string, List<Record>> _records;
+		//ushort _stamp;
+		//ushort _unknow;
+		//ushort _version;
+		//ushort _unknow2;
+		public Dictionary<GroupType, List<Group>> SubGroups = new();
+		public Dictionary<string, List<Record>> Records = new();
+		public Dictionary<uint, Record> RecordsByFormId;
+		public Dictionary<string, uint> FormIdsByEditorIds;
 
 		public uint ParentID => _parentId;
+
+		Group RootGroup;
 
 		public string Label
 		{
 			get; private set;
 		}
 
-		public Dictionary<GroupType, List<Group>> SubGroups => _subGroups;
-
-		public Dictionary<string, List<Record>> Records => _records;
-
 		public GroupType Type => _groupType;
 
-		public void Deserialize(BetterReader reader, string name, GameID gameID)
+		public void Deserialize(BetterReader reader, string name, GameID gameID, Group rootGroup)
 		{
 			_type = name;
-			_subGroups = new Dictionary<GroupType, List<Group>>();
-			_records = new Dictionary<string, List<Record>>();
+
+			if (RootGroup == null)
+			{
+				RootGroup = this;
+				RecordsByFormId = new();
+				FormIdsByEditorIds = new();
+			}
+			else
+			{
+				RootGroup = rootGroup;
+			}
 
 			var headerSize = 24;
 
@@ -84,13 +93,13 @@ namespace Fallout.NET.TES4
 					break;
 			}
 
-			_stamp = reader.ReadUInt16();
-			_unknow = reader.ReadUInt16();
+			var _stamp = reader.ReadUInt16();
+			var _unknow = reader.ReadUInt16();
 
 			if (gameID != GameID.Oblivion)
 			{
-				_version = reader.ReadUInt16();
-				_unknow2 = reader.ReadUInt16();
+				var _version = reader.ReadUInt16();
+				var _unknow2 = reader.ReadUInt16();
 			}
 
 			if (Label != null)
@@ -105,8 +114,8 @@ namespace Fallout.NET.TES4
 			Record record = null;
 
 			// Only used for debug helping.
-			var logGroupDebugDico = new List<GroupType>();
-			var logRecordDebugDico = new List<string>();
+			//var logGroupDebugDico = new List<GroupType>();
+			//var logRecordDebugDico = new List<string>();
 
 			while (reader.Position < endRead)
 			{
@@ -114,43 +123,54 @@ namespace Fallout.NET.TES4
 
 				if (fname == "GRUP")
 				{
-					group = new Group();
-					group.Deserialize(reader, fname, gameID);
+					// Sub group
 
-					if (!_subGroups.ContainsKey(group.Type))
+					group = new Group();
+					group.Deserialize(reader, fname, gameID, RootGroup);
+
+					if (!SubGroups.ContainsKey(group.Type))
 					{
 						var list = new List<Group>();
 						list.Add(group);
-						_subGroups.Add(group.Type, list);
+						SubGroups.Add(group.Type, list);
 					}
 					else
-						_subGroups[group.Type].Add(group);
-
-					if (!logGroupDebugDico.Contains(group._groupType))
 					{
-						logGroupDebugDico.Add(group._groupType);
-						Utils.LogBuffer("\t# SubGroup: {0}", (GroupType)group._groupType);
+						SubGroups[group.Type].Add(group);
 					}
+					if (record != null)
+					{
+						record.NoteSubGroup(group);
+					}
+					//if (!logGroupDebugDico.Contains(group._groupType))
+					//{
+					//	logGroupDebugDico.Add(group._groupType);
+					//	Utils.LogBuffer("\t# SubGroup: {0}", (GroupType)group._groupType);
+					//}
 				}
 				else
 				{
 					record = Record.GetRecord(fname);
 					record.Deserialize(reader, fname, gameID);
 
-					if (!_records.ContainsKey(record.Type))
+					if (!Records.ContainsKey(record.Type))
 					{
 						var list = new List<Record>();
 						list.Add(record);
-						_records.Add(record.Type, list);
+						Records.Add(record.Type, list);
 					}
 					else
-						_records[record.Type].Add(record);
-
-					if (!logRecordDebugDico.Contains(record.Type))
 					{
-						logRecordDebugDico.Add(record.Type);
-						Utils.LogBuffer("\t- Record: {0}", record.Type);
+						Records[record.Type].Add(record);
 					}
+
+					RootGroup.RecordsByFormId.Add(record.FormId, record);
+
+					//if (!logRecordDebugDico.Contains(record.Type))
+					//{
+					//	logRecordDebugDico.Add(record.Type);
+					//	Utils.LogBuffer("\t- Record: {0}", record.Type);
+					//}
 				}
 			}
 		}

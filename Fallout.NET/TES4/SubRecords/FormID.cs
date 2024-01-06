@@ -19,5 +19,12 @@ namespace Fallout.NET.TES4.SubRecords
 		{
 			return Value.ToString("X");
 		}
+
+		public static uint Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			UnityEngine.Debug.Assert(datasize == 4);
+			return reader.ReadUInt32();
+		}
 	}
 }

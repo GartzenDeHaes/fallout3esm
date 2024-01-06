@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Fallout.NET.Core;
@@ -6,10 +7,12 @@ using Fallout.NET.TES4.SubRecords;
 
 namespace Fallout.NET.TES4.Records
 {
+	/// <summary>
+	/// Faction
+	/// </summary>
 	public class FACTRecord : Record
 	{
-		public STRSubRecord EDID;
-		public STRSubRecord FULL;
+		public STRSubRecord FULL_Name;
 		public List<XNAMSubRecord> XNAMRelations =  new();
 		public Flags1 DATA_Flags1;
 		public Flags2 DATA_Flags2;
@@ -19,23 +22,25 @@ namespace Fallout.NET.TES4.Records
 		{
 			string name;
 
-			using (var stream = new BetterMemoryReader(reader.ReadBytes((int)size)))
-			{
-				var end = stream.Length;
+			var bytes = ArrayPool<byte>.Shared.Rent((int)size);
+			var ssize = reader.ReadBytes(new Span<byte>(bytes, 0, (int)size));
 
-				while (stream.Position < end)
+			using (var stream = new BetterMemoryReader(bytes))
+			{
+				//var end = stream.Length;
+
+				while (stream.Position < ssize)
 				{
 					name = stream.ReadString(4);
 
 					switch (name)
 					{
 						case "EDID":
-							EDID = new STRSubRecord();
-							EDID.Deserialize(stream, name);
+							EDID = STRSubRecord.Read(stream, name);
 							break;
 						case "FULL":
-							FULL = new STRSubRecord();
-							FULL.Deserialize(stream, name);
+							FULL_Name = new STRSubRecord();
+							FULL_Name.Deserialize(stream, name);
 							break;
 						case "XNAM":
 							var xnam = new XNAMSubRecord();
@@ -85,6 +90,8 @@ namespace Fallout.NET.TES4.Records
 					}
 				}
 			}
+
+			ArrayPool<byte>.Shared.Return(bytes);
 		}
 
 		[Flags]

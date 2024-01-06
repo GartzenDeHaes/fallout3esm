@@ -33,7 +33,6 @@ namespace Fallout.NET.TES4.Records
 	/// </remarks>
 	public sealed class AVIFRecord : Record
 	{
-		public STRSubRecord EDID;
 		public STRSubRecord FULL;
 		public STRSubRecord DESC;
 		public STRSubRecord ICON;
@@ -56,8 +55,7 @@ namespace Fallout.NET.TES4.Records
 					switch (name)
 					{
 						case "EDID":
-							EDID = new STRSubRecord();
-							EDID.Deserialize(stream, name);
+							EDID = STRSubRecord.Read(stream, name);
 							break;
 						case "FULL":
 							FULL = new STRSubRecord();

@@ -3,6 +3,7 @@ using Fallout.NET.TES4.SubRecords;
 using Fallout.NET.TES4.SubRecords.STAT;
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -11,66 +12,63 @@ namespace Fallout.NET.TES4.Records
 {
 	public sealed class NPC_Record : Record
 	{
-		public STRSubRecord EDID;
-		public STRSubRecord FULL;
-		public STRSubRecord MODL;
-		public OBNDSubRecord OBND_Bounds;
-		public ACBSSubRecord ACBS_MoreStats;
-		public FormID INAM_DeathItem;
-		public FormID VTCK_Voice;
-		public FormID TPLT_TemplateNpcOrLvln;
-		public FormID RNAM_Race;
+		public STRSubRecord FULL = new();
+		public STRSubRecord MODL = new();
+		public OBNDSubRecord OBND_Bounds = new();
+		public ACBSSubRecord ACBS_MoreStats = new();
+		public FormID INAM_DeathItem = new();
+		public FormID VTCK_Voice = new();
+		public FormID TPLT_TemplateNpcOrLvln = new();
+		public FormID RNAM_Race = new();
 		public ImpactMaterialType ImpactMaterial;
-		public FormID EITM_UnarmedAttackEffect;
-		public FormID SCRI;
-		public FormID CNAM_Class;
-		public FormID HNAM_Head;
-		public FormID ENAM_Eyes;
-		public FloatSubRecord NAM6_Height;
-		public FloatSubRecord NAM7_Weight;
-		public FormID ZNAM_CombatStyle;
+		public FormID EITM_UnarmedAttackEffect = new();
+		public FormID SCRI = new();
+		public FormID CNAM_Class = new();
+		public FormID HNAM_Head = new();
+		public FormID ENAM_Eyes = new();
+		public FloatSubRecord NAM6_Height = new();
+		public FloatSubRecord NAM7_Weight = new();
+		public FormID ZNAM_CombatStyle = new();
 		public List<FormID> PKID_AiPackages = new List<FormID>();
-		public List<FormID> PNAM = new List<FormID>();
+		public List<FormID> PNAM_HeadPart = new List<FormID>();
 		public List<SNAMSubRecord> SNAM_Factions = new List<SNAMSubRecord>();
-		public DATASubRecord DATA_Stats;
-		public DNAMSubRecord DNAM_Skills;
-		public COEDSubRecord COED_Ownership;
+		public DATASubRecord DATA_Stats = new();
+		public DNAMSubRecord DNAM_Skills = new();
+		public COEDSubRecord COED_Ownership = new();
 		public List<FormID> SPLO_Spells = new();
 
 		protected override void ExtractSubRecords(BetterReader reader, GameID gameID, uint size)
 		{
-			var bytes = reader.ReadBytes((int)size);
-			var name = string.Empty;
+			//var bytes = reader.ReadBytes((int)size);
+			string name;
+
+			var bytes = ArrayPool<byte>.Shared.Rent((int)size);
+			var ssize = reader.ReadBytes(new Span<byte>(bytes, 0, (int)size));
 
 			using (var stream = new BetterMemoryReader(bytes))
 			{
-				var end = stream.Length;
+				//var end = stream.Length;
 
-				while (stream.Position < end)
+				while (stream.Position < ssize)
 				{
 					name = stream.ReadString(4);
 
 					switch (name)
 					{
 						case "EDID":
-							EDID = new STRSubRecord();
-							EDID.Deserialize(stream, name);
+							EDID = STRSubRecord.Read(stream, name);
 							break;
 						case "FULL":
-							FULL = new STRSubRecord();
 							FULL.Deserialize(stream, name);
 							//Debug.Log($"NPC {FULL.Value}");
 							break;
 						case "OBND":
-							OBND_Bounds = new OBNDSubRecord();
 							OBND_Bounds.Deserialize(stream, name);
 							break;
 						case "MODL":
-							MODL = new STRSubRecord();
 							MODL.Deserialize(stream, name);
 							break;
 						case "ACBS":
-							ACBS_MoreStats = new ACBSSubRecord();
 							ACBS_MoreStats.Deserialize(stream, name);
 							break;
 						case "SNAM":
@@ -79,27 +77,21 @@ namespace Fallout.NET.TES4.Records
 							SNAM_Factions.Add(snam);
 							break;
 						case "INAM":
-							INAM_DeathItem = new FormID();
 							INAM_DeathItem.Deserialize(stream, name);
 							break;
 						case "VTCK":
-							VTCK_Voice = new FormID();
 							VTCK_Voice.Deserialize(stream, name);
 							break;
 						case "TPLT":
-							TPLT_TemplateNpcOrLvln = new FormID();
 							TPLT_TemplateNpcOrLvln.Deserialize(stream, name);
 							break;
 						case "RNAM":
-							RNAM_Race = new FormID();
 							RNAM_Race.Deserialize(stream, name);
 							break;
 						case "EITM":
-							EITM_UnarmedAttackEffect = new FormID();
 							EITM_UnarmedAttackEffect.Deserialize(stream, name);
 							break;
 						case "SCRI":
-							SCRI = new FormID();
 							SCRI.Deserialize(stream, name);
 							break;
 						case "PKID":
@@ -108,44 +100,35 @@ namespace Fallout.NET.TES4.Records
 							PKID_AiPackages.Add(pkid);
 							break;
 						case "CNAM":
-							CNAM_Class = new FormID();
 							CNAM_Class.Deserialize(stream, name);
 							break;
 						case "PNAM":
 							var pnam = new FormID();
 							pnam.Deserialize(stream, name);
-							PNAM.Add(pnam);
+							PNAM_HeadPart.Add(pnam);
 							break;
 						case "HNAM":
-							HNAM_Head = new FormID();
 							HNAM_Head.Deserialize(stream, name);
 							break;
 						case "ENAM":
-							ENAM_Eyes = new FormID();
 							ENAM_Eyes.Deserialize(stream, name);
 							break;
 						case "ZNAM":
-							ZNAM_CombatStyle = new FormID();
 							ZNAM_CombatStyle.Deserialize(stream, name);
 							break;
 						case "DNAM":
-							DNAM_Skills = new DNAMSubRecord();
 							DNAM_Skills.Deserialize(stream, name);
 							break;
 						case "DATA":   // Zero length
-							DATA_Stats = new DATASubRecord();
 							DATA_Stats.Deserialize(stream, name);
 							break;
 						case "NAM6":
-							NAM6_Height = new FloatSubRecord();
 							NAM6_Height.Deserialize(stream, name);
 							break;
 						case "NAM7":
-							NAM7_Weight = new FloatSubRecord();
 							NAM7_Weight.Deserialize(stream, name);
 							break;
 						case "COED":
-							COED_Ownership = new COEDSubRecord();
 							COED_Ownership.Deserialize(stream, name);
 							break;
 						case "NAM4":
@@ -176,6 +159,8 @@ namespace Fallout.NET.TES4.Records
 					}
 				}
 			}
+
+			ArrayPool<byte>.Shared.Return(bytes);
 		}
 
 		public override string ToString()

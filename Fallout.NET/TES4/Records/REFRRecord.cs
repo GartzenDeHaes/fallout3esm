@@ -12,62 +12,70 @@ namespace Fallout.NET.TES4.Records
 	/// </summary>
 	public sealed class REFRRecord : Record
 	{
-		public STRSubRecord EDID;
-		public FormID NAME;
-		public REFR_XLOCSubRecord XLOC;
-		public FormID XOWN;
-		public FormID XLKR;
-		public PosAndRotSubRecord DATA;
-		public FloatSubRecord XSCL;
-		public REFR_XTELSubRecord XTEL;
-		public REFR_XNDPSubRecord XNDP;
-		public FormID XLTW;
-		public FloatSubRecord XRDS;
-		public FormID XEMI;
-		public List<REFR_XPWRSubRecord> XPWR = new List<REFR_XPWRSubRecord>();
-		public FloatSubRecord XPRD;
-		public FormID INAM;
-		public SCHRSubRecord SCHR;
+		public STRSubRecord FULL_MapNameMarker;
+		/// <summary>FormID of a TREE, SOUN, ACTI, DOOR, STAT, FURN, CONT, ARMO, AMMO, LVLN, LVLC, MISC, WEAP, BOOK, KEYM, ALCH, LIGH, GRAS, ASPC, IDLM, ARMA, MSTT, NOTE, PWAT, SCOL, TACT, TERM or TXST record.</summary>
+		public uint NAME_BaseFormId;
+		public REFR_XLOCSubRecord XLOC_LockData;
+		/// <summary>Ownership data. FormID of a FACT, ACHR or NPC_ record.</summary>
+		public FormID XOWN_OwnerId;
+		/// <summary>FormID of a REFR, ACRE, ACHR, PGRE or PMIS record.</summary>
+		public FormID XLKR_LinkedReference;
+		public PosAndRotSubRecord DATA_PosRot;
+		public FloatSubRecord XSCL_Scale;
+		public REFR_XTELSubRecord XTEL_TeleportDestination;
+		public REFR_XNDPSubRecord XNDP_NavigationDoorLink;
+		/// <summary>FormID of a REFR record.</summary>
+		public FormID XLTW_LitWater;
+		public FloatSubRecord XRDS_Radius;
+		/// <summary>FormID of a LIGH or REGN record.</summary>
+		public FormID XEMI_Emittance;
+		public List<REFR_XPWRSubRecord> XPWR_WaterReflection;
+		public FloatSubRecord XPRD_PatrolDataIdleTime;
+		/// <summary>Patrol data. FormID of an IDLE record, or null.</summary>
+		public FormID INAM_PatrolIdle;
+		public ScriptSubRecordCollection SCHR_PatrolScript;
 		//public REFR_TNAMSubRecord TNAM { get; private set; }
 		//public FormID TNAM { get; private set; }
-		public BytesSubRecord TNAM;
-		public REFR_XMBOSubRecord XMBO;
-		public REFR_XPRMSubRecord XPRM;
-		public REFR_XRMRSubRecord XRMR;
-		public FormID XLRM;
-		public REFR_XACTSubRecord XACT;
-		public BytesSubRecord XRGD;
-		public FloatSubRecord XHLP;
-		public ByteSubRecord XSED;
-		public REFR_XPODSubRecord XPOD;
-		public REFR_XRDOSubRecord XRDO;
-		public ByteSubRecord XAPD;
-		public List<REFR_XAPRSubRecord> XAPR = new List<REFR_XAPRSubRecord>();
-		public REFR_XESPSubRecord XESP;
-		public UInt32SubRecord XLCM;
-		public UInt32SubRecord XCNT;
-		public REFR_XTRISubRecord XTRI;
-		public BytesSubRecord XOCP;
-		public FormID XAMT;
-		public UInt32SubRecord XAMC;
-		public FloatSubRecord XRAD;
-		public FormID XTRG;
-		public BytesSubRecord XORD;
-		public FormID XMBR;
-		public BytesSubRecord XCLP;
-		public REFR_FNAMSubRecord FNAM;
-		public STRSubRecord FULL;
-		public BytesSubRecord SCDA;
-		public BytesSubRecord SCRO;
+		public BytesSubRecord TNAM_MapMarkerData;
+		public REFR_XMBOSubRecord XMBO_BoundsHalfExts;
+		public REFR_XPRMSubRecord XPRM_Primitive;
+		public REFR_XRMRSubRecord XRMR_RomeDataHeader;
+		/// <summary>FormID of a REFR record.</summary>
+		public FormID XLRM_LinkedRoom;
+		public REFR_XACTSubRecord XACT_ActionFlag;
+		public BytesSubRecord XRGD_RagdollData;
+		public FloatSubRecord XHLP_Health;
+		public ByteSubRecord XSED_SpeedtreeSeed;
+		/// <summary>formid[]. Array of REFR record FormIDs, or null.</summary>
+		public REFR_XPODSubRecord XPOD_PortalRooms;
+		public REFR_XRDOSubRecord XRDO_RadioData;
+		public ByteSubRecord XAPD_ActivateParentsFlags;
+		public List<REFR_XAPRSubRecord> XAPR_ActivateParentRef;
+		public REFR_XESPSubRecord XESP_EnableParent;
+		public UInt32SubRecord XLCM_LevelModifer;
+		public UInt32SubRecord XCNT_Count;
+		public REFR_XTRISubRecord XTRI_TriggerType;
+		public BytesSubRecord XOCP_OcclusionPlaneData;
+		public FormID XAMT_AmmoType;
+		public UInt32SubRecord XAMC_AmmoCount;
+		public FloatSubRecord XRAD_Radiation;
+		/// <summary>FormID of a REFR, ACRE, ACHR, PGRE or PMIS record.</summary>
+		public FormID XTRG_Target;
+		public BytesSubRecord XORD_LinkedOcclusionPlanes;
+		public FormID XMBR_MultiBoundReference;
+		public BytesSubRecord XCLP_LinkedReferenceColor;
+		public REFR_FNAMSubRecord FNAM_MapMarkerFlags;
 		public BytesSubRecord XLOD;
-		public BytesSubRecord RCLR;
-		public BytesSubRecord XRGB;
+		public BytesSubRecord RCLR_LinkedReferenceColor;
+		public BytesSubRecord XRGB_RagdollBiped;
+		public FormID XEZN_EncounterZone;
+		public UInt32SubRecord XRNK_FactionRank;
 
-		public bool XPPA;
-		public bool ONAM;
-		public bool XIBS;
-		public bool XMBP;
-		public bool XMRK;
+		public bool XPPA_PatrolScriptMarker;
+		public bool ONAM_OpenByDefault;
+		public bool XIBS_IgnoredBySandbox;
+		public bool XMBP_MBP_PrimitiveMarker;
+		public bool XMRK_MapMarkerMarker;
 
 		protected override void ExtractSubRecords(BetterReader reader, GameID gameID, uint size)
 		{
@@ -85,238 +93,239 @@ namespace Fallout.NET.TES4.Records
 					switch (name)
 					{
 						case "EDID":
-							EDID = new STRSubRecord();
-							EDID.Deserialize(stream, name);
+							EDID = STRSubRecord.Read(stream, name);
 							break;
 						case "NAME":
-							NAME = new FormID();
-							NAME.Deserialize(stream, name);
+							NAME_BaseFormId = FormID.Read(stream, name);
 							break;
 						case "XLOC":
-							XLOC = new REFR_XLOCSubRecord();
-							XLOC.Deserialize(stream, name);
+							XLOC_LockData = new REFR_XLOCSubRecord();
+							XLOC_LockData.Deserialize(stream, name);
 							break;
 						case "XOWN":
-							XOWN = new FormID();
-							XOWN.Deserialize(stream, name);
+							XOWN_OwnerId = new FormID();
+							XOWN_OwnerId.Deserialize(stream, name);
 							break;
 						case "XLKR":
-							XLKR = new FormID();
-							XLKR.Deserialize(stream, name);
+							XLKR_LinkedReference = new FormID();
+							XLKR_LinkedReference.Deserialize(stream, name);
 							break;
 						case "DATA":
-							DATA = new PosAndRotSubRecord();
-							DATA.Deserialize(stream, name);
+							DATA_PosRot = new PosAndRotSubRecord();
+							DATA_PosRot.Deserialize(stream, name);
 							break;
 						case "XSCL":
-							XSCL = new FloatSubRecord();
-							XSCL.Deserialize(stream, name);
+							XSCL_Scale = new FloatSubRecord();
+							XSCL_Scale.Deserialize(stream, name);
 							break;
 						case "XTEL":
-							XTEL = new REFR_XTELSubRecord();
-							XTEL.Deserialize(stream, name);
+							XTEL_TeleportDestination = new REFR_XTELSubRecord();
+							XTEL_TeleportDestination.Deserialize(stream, name);
 							break;
 						case "XNDP":
-							XNDP = new REFR_XNDPSubRecord();
-							XNDP.Deserialize(stream, name);
+							XNDP_NavigationDoorLink = new REFR_XNDPSubRecord();
+							XNDP_NavigationDoorLink.Deserialize(stream, name);
 							break;
 						case "XLTW":
-							XLTW = new FormID();
-							XLTW.Deserialize(stream, name);
+							XLTW_LitWater = new FormID();
+							XLTW_LitWater.Deserialize(stream, name);
 							break;
 						case "XRDS":
-							XRDS = new FloatSubRecord();
-							XRDS.Deserialize(stream, name);
+							XRDS_Radius = new FloatSubRecord();
+							XRDS_Radius.Deserialize(stream, name);
 							break;
 						case "XEMI":
-							XEMI = new FormID();
-							XEMI.Deserialize(stream, name);
+							XEMI_Emittance = new FormID();
+							XEMI_Emittance.Deserialize(stream, name);
 							break;
 						case "XPWR":
 							var xpwr = new REFR_XPWRSubRecord();
 							xpwr.Deserialize(stream, name);
-							XPWR.Add(xpwr);
+							XPWR_WaterReflection ??= new();
+							XPWR_WaterReflection.Add(xpwr);
 							break;
 						case "XPRD":
-							XPRD = new FloatSubRecord();
-							XPRD.Deserialize(stream, name);
+							XPRD_PatrolDataIdleTime = new FloatSubRecord();
+							XPRD_PatrolDataIdleTime.Deserialize(stream, name);
 							break;
 						case "XPPA":
 							var xppaSize = stream.ReadUInt16();
-							var xppaData = stream.ReadBytes(Convert.ToInt32(xppaSize));
-							XPPA = true;
-							if (xppaData.Length > 0)
-							{
-								break;
-							}
+							UnityEngine.Debug.Assert(xppaSize == 0);
+							XPPA_PatrolScriptMarker = true;
 							break;
 						case "INAM":
-							INAM = new FormID();
-							INAM.Deserialize(stream, name);
+							INAM_PatrolIdle = new FormID();
+							INAM_PatrolIdle.Deserialize(stream, name);
 							break;
 						case "SCHR":
-							SCHR = new SCHRSubRecord();
-							SCHR.Deserialize(stream, name);
+							SCHR_PatrolScript = new ScriptSubRecordCollection();
+							SCHR_PatrolScript.Deserialize(stream, name);
 							break;
 						case "TNAM":
-							TNAM = new BytesSubRecord();
-							TNAM.Deserialize(stream, name);
+							TNAM_MapMarkerData = new BytesSubRecord();
+							TNAM_MapMarkerData.Deserialize(stream, name);
 							break;
 						case "XMBO":
-							XMBO = new REFR_XMBOSubRecord();
-							XMBO.Deserialize(stream, name);
+							XMBO_BoundsHalfExts = new REFR_XMBOSubRecord();
+							XMBO_BoundsHalfExts.Deserialize(stream, name);
 							break;
 						case "XPRM":
-							XPRM = new REFR_XPRMSubRecord();
-							XPRM.Deserialize(stream, name);
+							XPRM_Primitive = new REFR_XPRMSubRecord();
+							XPRM_Primitive.Deserialize(stream, name);
 							break;
 						case "XRMR":
-							XRMR = new REFR_XRMRSubRecord();
-							XRMR.Deserialize(stream, name);
+							XRMR_RomeDataHeader = new REFR_XRMRSubRecord();
+							XRMR_RomeDataHeader.Deserialize(stream, name);
 							break;
 						case "XLRM":
-							XLRM = new FormID();
-							XLRM.Deserialize(stream, name);
+							XLRM_LinkedRoom = new FormID();
+							XLRM_LinkedRoom.Deserialize(stream, name);
 							break;
 						case "XACT":
-							XACT = new REFR_XACTSubRecord();
-							XACT.Deserialize(stream, name);
+							XACT_ActionFlag = new REFR_XACTSubRecord();
+							XACT_ActionFlag.Deserialize(stream, name);
 							break;
 						case "ONAM":
 							var onamSize = stream.ReadUInt16();
 							var onamData = stream.ReadBytes(Convert.ToInt32(onamSize));
-							ONAM = true;
+							ONAM_OpenByDefault = true;
 							if (onamData.Length > 0)
 							{
 								break;
 							}
 							break;
 						case "XRGD":
-							XRGD = new BytesSubRecord();
-							XRGD.Deserialize(stream, name);
+							XRGD_RagdollData = new BytesSubRecord();
+							XRGD_RagdollData.Deserialize(stream, name);
 							break;
 						case "XHLP":
-							XHLP = new FloatSubRecord();
-							XHLP.Deserialize(stream, name);
+							XHLP_Health = new FloatSubRecord();
+							XHLP_Health.Deserialize(stream, name);
 							break;
 						case "XSED":
-							XSED = new ByteSubRecord();
-							XSED.Deserialize(stream, name);
+							XSED_SpeedtreeSeed = new ByteSubRecord();
+							XSED_SpeedtreeSeed.Deserialize(stream, name);
 							break;
 						case "XPOD":
-							XPOD = new REFR_XPODSubRecord();
-							XPOD.Deserialize(stream, name);
+							UnityEngine.Debug.Assert(XPOD_PortalRooms == null);
+							XPOD_PortalRooms = new REFR_XPODSubRecord();
+							XPOD_PortalRooms.Deserialize(stream, name);
 							break;
 						case "XRDO":
-							XRDO = new REFR_XRDOSubRecord();
-							XRDO.Deserialize(stream, name);
+							XRDO_RadioData = new REFR_XRDOSubRecord();
+							XRDO_RadioData.Deserialize(stream, name);
 							break;
 						case "XAPD":
-							XAPD = new ByteSubRecord();
-							XAPD.Deserialize(stream, name);
+							XAPD_ActivateParentsFlags = new ByteSubRecord();
+							XAPD_ActivateParentsFlags.Deserialize(stream, name);
 							break;
 						case "XAPR":
 							var xapr = new REFR_XAPRSubRecord();
 							xapr.Deserialize(stream, name);
-							XAPR.Add(xapr);
-
-							if (XAPR.Count > 1)
-							{
-								break;
-							}
+							XAPR_ActivateParentRef ??= new();
+							XAPR_ActivateParentRef.Add(xapr);
 							break;
 						case "XESP":
-							XESP = new REFR_XESPSubRecord();
-							XESP.Deserialize(stream, name);
+							XESP_EnableParent = new REFR_XESPSubRecord();
+							XESP_EnableParent.Deserialize(stream, name);
 							break;
 						case "XLCM":
-							XLCM = new UInt32SubRecord();
-							XLCM.Deserialize(stream, name);
+							XLCM_LevelModifer = new UInt32SubRecord();
+							XLCM_LevelModifer.Deserialize(stream, name);
 							break;
 						case "XCNT":
-							XCNT = new UInt32SubRecord();
-							XCNT.Deserialize(stream, name);
+							XCNT_Count = new UInt32SubRecord();
+							XCNT_Count.Deserialize(stream, name);
 							break;
 						case "XTRI":
-							XTRI = new REFR_XTRISubRecord();
-							XTRI.Deserialize(stream, name);
+							XTRI_TriggerType = new REFR_XTRISubRecord();
+							XTRI_TriggerType.Deserialize(stream, name);
 							break;
 						case "XOCP":
-							XOCP = new BytesSubRecord();
-							XOCP.Deserialize(stream, name);
+							XOCP_OcclusionPlaneData = new BytesSubRecord();
+							XOCP_OcclusionPlaneData.Deserialize(stream, name);
 							break;
 						case "XAMT":
-							XAMT = new FormID();
-							XAMT.Deserialize(stream, name);
+							XAMT_AmmoType = new FormID();
+							XAMT_AmmoType.Deserialize(stream, name);
 							break;
 						case "XAMC":
-							XAMC = new UInt32SubRecord();
-							XAMC.Deserialize(stream, name);
+							XAMC_AmmoCount = new UInt32SubRecord();
+							XAMC_AmmoCount.Deserialize(stream, name);
 							break;
 						case "XRAD":
-							XRAD = new FloatSubRecord();
-							XRAD.Deserialize(stream, name);
+							XRAD_Radiation = new FloatSubRecord();
+							XRAD_Radiation.Deserialize(stream, name);
 							break;
 						case "XIBS":
 							var xibsSize = stream.ReadUInt16();
 							var xibsData = stream.ReadBytes(xibsSize);
-							XIBS = true;
+							XIBS_IgnoredBySandbox = true;
 							break;
 						case "XTRG":
-							XTRG = new FormID();
-							XTRG.Deserialize(stream, name);
+							XTRG_Target = new FormID();
+							XTRG_Target.Deserialize(stream, name);
 							break;
 						case "XORD":
-							XORD = new BytesSubRecord();
-							XORD.Deserialize(stream, name);
+							XORD_LinkedOcclusionPlanes = new BytesSubRecord();
+							XORD_LinkedOcclusionPlanes.Deserialize(stream, name);
 							break;
 						case "XMBP":
 							var xmbpSize = stream.ReadUInt16();
 							var xmbpData = stream.ReadBytes(xmbpSize);
-							XMBP = true;
+							XMBP_MBP_PrimitiveMarker = true;
 							break;
 						case "XMBR":
-							XMBR = new FormID();
-							XMBR.Deserialize(stream, name);
+							XMBR_MultiBoundReference = new FormID();
+							XMBR_MultiBoundReference.Deserialize(stream, name);
 							break;
 						case "XCLP":
-							XCLP = new BytesSubRecord();
-							XCLP.Deserialize(stream, name);
+							XCLP_LinkedReferenceColor = new BytesSubRecord();
+							XCLP_LinkedReferenceColor.Deserialize(stream, name);
 							break;
 						case "XMRK":
 							var xmrkSize = stream.ReadUInt16();
 							var xmrkData = stream.ReadBytes(xmrkSize);
-							XMRK = true;
+							XMRK_MapMarkerMarker = true;
 							break;
 						case "FNAM":
-							FNAM = new REFR_FNAMSubRecord();
-							FNAM.Deserialize(stream, name);
+							FNAM_MapMarkerFlags = new REFR_FNAMSubRecord();
+							FNAM_MapMarkerFlags.Deserialize(stream, name);
 							break;
 						case "FULL":
-							FULL = new STRSubRecord();
-							FULL.Deserialize(stream, name);
+							FULL_MapNameMarker = new STRSubRecord();
+							FULL_MapNameMarker.Deserialize(stream, name);
 							break;
-						case "SCDA":
-							SCDA = new BytesSubRecord();
-							SCDA.Deserialize(stream, name);
-							break;
-						case "SCRO":
-							SCRO = new BytesSubRecord();
-							SCRO.Deserialize(stream, name);
-							break;
+						//case "SCDA":
+						//	SCDA = new BytesSubRecord();
+						//	SCDA.Deserialize(stream, name);
+						//	break;
+						//case "SCRO":
+						//	SCRO = new BytesSubRecord();
+						//	SCRO.Deserialize(stream, name);
+						//	break;
 						case "XLOD":
 							XLOD = new BytesSubRecord();
 							XLOD.Deserialize(stream, name);
 							break;
 						case "RCLR":
-							RCLR = new BytesSubRecord();
-							RCLR.Deserialize(stream, name);
+							RCLR_LinkedReferenceColor = new BytesSubRecord();
+							RCLR_LinkedReferenceColor.Deserialize(stream, name);
 							break;
 						case "XRGB":
-							XRGB = new BytesSubRecord();
-							XRGB.Deserialize(stream, name);
+							XRGB_RagdollBiped = new BytesSubRecord();
+							XRGB_RagdollBiped.Deserialize(stream, name);
+							break;
+						case "XEZN":
+							XEZN_EncounterZone = new();
+							XEZN_EncounterZone.Deserialize(stream, name);
+							break;
+						case "XRNK":
+							XRNK_FactionRank = new();
+							XRNK_FactionRank.Deserialize(stream, name);
 							break;
 						default:
+							UnityEngine.Debug.Log($"Unhandled {Type} subrec {name}");
 							var rest = stream.ReadUInt16();
 							stream.ReadBytes(rest);
 							break;

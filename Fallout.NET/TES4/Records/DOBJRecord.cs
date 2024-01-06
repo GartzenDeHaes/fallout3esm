@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 using Fallout.NET.Core;
 using Fallout.NET.TES4.SubRecords;
-using Portland.Mathmatics;
-using static System.Collections.Specialized.BitVector32;
-using static UnityEditorInternal.ReorderableList;
-
-using UnityEditor.Playables;
 
 using UnityEngine;
 
@@ -21,7 +16,6 @@ namespace Fallout.NET.TES4.Records
 	/// </summary>
 	public sealed class DOBJRecord : Record
 	{
-		public STRSubRecord EDID;
 		public FormID Stimpack = new();
 		public FormID SuperStimpack = new();
 		public FormID RadX = new();
@@ -60,8 +54,7 @@ namespace Fallout.NET.TES4.Records
 					switch (name)
 					{
 						case "EDID":
-							EDID = new STRSubRecord();
-							EDID.Deserialize(stream, name);
+							EDID = STRSubRecord.Read(stream, name);
 							break;
 						case "DATA":
 							var dataLen = stream.ReadUInt16();

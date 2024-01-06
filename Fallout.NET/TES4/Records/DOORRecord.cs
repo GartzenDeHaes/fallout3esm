@@ -2,11 +2,14 @@ using Fallout.NET.Core;
 
 namespace Fallout.NET.TES4.Records
 {
+	/// <summary>
+	/// Door
+	/// </summary>
 	public class DOORRecord : Record
 	{
 		protected override void ExtractSubRecords(BetterReader reader, GameID gameID, uint size)
 		{
-			 reader.ReadBytes((int)size);
+			 reader.SkipBytes((int)size);
 		}
 	}
 }

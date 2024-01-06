@@ -9,7 +9,8 @@ namespace Fallout.NET.TES4.SubRecords
 	public sealed class XNAMSubRecord : SubRecord
 	{
 		public uint FactionFormId;
-		public FactionRelation Flags;
+		public int Modifier;
+		public GroupCombatReaction Flags;
 
 		public override void Deserialize(BetterReader reader, string name)
 		{
@@ -17,14 +18,13 @@ namespace Fallout.NET.TES4.SubRecords
 
 			FactionFormId = reader.ReadUInt32();
 
-			var mod = reader.ReadInt32();
+			Modifier = reader.ReadInt32();
 
-			Flags = (FactionRelation)reader.ReadInt32();
+			Flags = (GroupCombatReaction)reader.ReadInt32();
 		}
 	}
 
-	[Flags]
-	public enum FactionRelation
+	public enum GroupCombatReaction
 	{
 		Neutral = 0,
 		Enemy = 1,

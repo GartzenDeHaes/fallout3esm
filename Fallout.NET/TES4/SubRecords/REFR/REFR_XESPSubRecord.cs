@@ -10,7 +10,6 @@ namespace Fallout.NET.TES4.SubRecords.REFR
 	{
 		public uint Reference;
 		public REFR_XESPFlags Flags;
-		public byte[] Unknown;
 
 		public override void Deserialize(BetterReader reader, string name)
 		{
@@ -18,7 +17,7 @@ namespace Fallout.NET.TES4.SubRecords.REFR
 
 			Reference = reader.ReadUInt32();
 			Flags = (REFR_XESPFlags)reader.ReadByte();
-			Unknown = reader.ReadBytes(3);
+			var Unknown = reader.ReadBytes(3);
 		}
 	}
 

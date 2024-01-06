@@ -18,6 +18,13 @@ namespace Fallout.NET.TES4.Records
 		{
 			return Value.ToString();
 		}
+
+
+		public static byte[] Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			return reader.ReadBytes(datasize);
+		}
 	}
 
 	public sealed class ByteSubRecord : SubRecord
@@ -33,6 +40,23 @@ namespace Fallout.NET.TES4.Records
 		public override string ToString()
 		{
 			return Value.ToString();
+		}
+
+		public static byte Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 1);
+			return reader.ReadByte();
+		}
+	}
+
+	public sealed class SByteSubRecord
+	{
+		public static sbyte Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 1);
+			return (sbyte)reader.ReadByte();
 		}
 	}
 
@@ -50,23 +74,46 @@ namespace Fallout.NET.TES4.Records
 		{
 			return Value;
 		}
+
+		public static string Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			return reader.ReadNullTerminatedString(datasize);
+		}
 	}
 
-	//public class UInt16SubRecord : SubRecord
-	//{
-	//	public ushort Value { get; protected set; }
+	public class UInt16SubRecord : SubRecord
+	{
+		public ushort Value { get; protected set; }
 
-	//	public override void Deserialize(BetterReader reader, string name)
-	//	{
-	//		base.Deserialize(reader, name);
-	//		Value = reader.ReadUInt16();
-	//	}
+		public override void Deserialize(BetterReader reader, string name)
+		{
+			base.Deserialize(reader, name);
+			Value = reader.ReadUInt16();
+		}
 
-	//	public override string ToString()
-	//	{
-	//		return Value.ToString();
-	//	}
-	//}
+		public override string ToString()
+		{
+			return Value.ToString();
+		}
+
+		public static ushort Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 2);
+			return reader.ReadUInt16();
+		}
+	}
+
+	public class Int16SubRecord : SubRecord
+	{
+		public static short Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 2);
+			return reader.ReadInt16();
+		}
+	}
 
 	public sealed class UInt32SubRecord : SubRecord
 	{
@@ -82,9 +129,24 @@ namespace Fallout.NET.TES4.Records
 		{
 			return Value.ToString();
 		}
+
+		public static uint Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 4);
+			return reader.ReadUInt32();
+		}
 	}
 
-
+	public sealed class Int32SubRecord : SubRecord
+	{
+		public static int Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 4);
+			return reader.ReadInt32();
+		}
+	}
 	public sealed class UInt64SubRecord : SubRecord
 	{
 		public ulong Value;
@@ -98,6 +160,13 @@ namespace Fallout.NET.TES4.Records
 		public override string ToString()
 		{
 			return Value.ToString();
+		}
+
+		public static ulong Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 8);
+			return reader.ReadUInt64();
 		}
 	}
 
@@ -115,6 +184,13 @@ namespace Fallout.NET.TES4.Records
 		{
 			return Value.ToString();
 		}
+
+		public static float Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 4);
+			return reader.ReadSingle();
+		}
 	}
 
 	public sealed class Vector2iSubRecord : SubRecord
@@ -130,6 +206,13 @@ namespace Fallout.NET.TES4.Records
 		public override string ToString()
 		{
 			return $"X:{Value.x.ToString()} Y:{Value.y.ToString()})";
+		}
+
+		public static Vector2Int Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 8);
+			return new Vector2Int(reader.ReadInt32(), reader.ReadInt32());
 		}
 	}
 
@@ -148,6 +231,23 @@ namespace Fallout.NET.TES4.Records
 		public override string ToString()
 		{
 			return $"X:{X.ToString()} Y:{Y.ToString()})";
+		}
+
+		public static Vector2 Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 8);
+			return new Vector2(reader.ReadSingle(), reader.ReadSingle());
+		}
+	}
+
+	public static class ColorSubRecord
+	{
+		public static Color Read(BetterReader reader, string name)
+		{
+			var datasize = reader.ReadUInt16();
+			Debug.Assert(datasize == 4);
+			return new Color(reader.ReadByte()/255f, reader.ReadByte()/255f, reader.ReadByte()/255f, reader.ReadByte()/255f);
 		}
 	}
 }

@@ -3,13 +3,13 @@
 namespace Fallout.NET.TES4.Records
 {
 	/// <summary>
-	/// Actor stats and perks
+	/// Image Space
 	/// </summary>
 	public sealed class IMGSRecord : Record
 	{
 		protected override void ExtractSubRecords(BetterReader reader, GameID gameID, uint size)
 		{
-			reader.ReadBytes((int)size);
+			reader.SkipBytes((int)size);
 		}
 	}
 }

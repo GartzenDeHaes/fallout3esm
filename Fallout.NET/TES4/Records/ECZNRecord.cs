@@ -9,7 +9,7 @@ namespace Fallout.NET.TES4.Records
 	{
 		protected override void ExtractSubRecords(BetterReader reader, GameID gameID, uint size)
 		{
-			reader.ReadBytes((int)size);
+			reader.SkipBytes((int)size);
 		}
 	}
 }

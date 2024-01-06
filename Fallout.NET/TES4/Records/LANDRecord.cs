@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Fallout.NET.TES4.Records
 {
 	/// <summary>
-	/// Landscape
+	/// Landscape Texture
 	/// </summary>
 	public class LANDRecord : Record
 	{
@@ -15,9 +15,9 @@ namespace Fallout.NET.TES4.Records
 		public VNMLorVCLRSubRecord VNML_VertexNormal;
 		public VNMLorVCLRSubRecord VCLR_VertexColor;
 		public VHGTSubRecord VHGT_VertexHeightMap;
-		public List<ATXTorBTXTSubRecord> BTXT_BaseLayerHeader = new List<ATXTorBTXTSubRecord>();
-		public List<ATXTorBTXTSubRecord> ATXT_AlphaLayerHeader = new List<ATXTorBTXTSubRecord>();
-		public List<VTXTSubRecord> VTXT_Textures = new List<VTXTSubRecord>();
+		public ATXTorBTXTSubRecord BTXT_BaseLayerHeader = new ();
+		public ATXTorBTXTSubRecord ATXT_AlphaLayerHeader = new ();
+		public VTXTSubRecord VTXT_Texture = new ();
 
 		protected override void ExtractSubRecords(BetterReader reader, GameID gameID, uint size)
 		{
@@ -51,39 +51,16 @@ namespace Fallout.NET.TES4.Records
 							VHGT_VertexHeightMap.Deserialize(stream, name);
 							break;
 						case "BTXT":
-							var btxt = new ATXTorBTXTSubRecord();
-							btxt.Deserialize(stream, name);
-							BTXT_BaseLayerHeader.Add(btxt);
-
-							if (BTXT_BaseLayerHeader.Count > 1)
-							{
-								break;
-							}
-
+							BTXT_BaseLayerHeader.Deserialize(stream, name);
 							break;
 						case "ATXT":
-							var atxt = new ATXTorBTXTSubRecord();
-							atxt.Deserialize(stream, name);
-							ATXT_AlphaLayerHeader.Add(atxt);
-
-							if (ATXT_AlphaLayerHeader.Count > 1)
-							{
-								break;
-							}
-
+							ATXT_AlphaLayerHeader.Deserialize(stream, name);
 							break;
 						case "VTXT":
-							var vtxt = new VTXTSubRecord();
-							vtxt.Deserialize(stream, name);
-							VTXT_Textures.Add(vtxt);
-
-							if (VTXT_Textures.Count > 1)
-							{
-								break;
-							}
-
+							VTXT_Texture.Deserialize(stream, name);
 							break;
 						default:
+							UnityEngine.Debug.Log($"{Type} unknown {name}");
 							var rest = stream.ReadUInt16();
 							stream.ReadBytes(rest);
 							break;

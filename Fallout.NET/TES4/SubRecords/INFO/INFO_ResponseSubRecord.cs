@@ -8,11 +8,11 @@ namespace Fallout.NET.TES4.SubRecords.INFO
 {
 	public sealed class INFO_ResponseSubRecord
 	{
-		public INFO_TRDTSubrecord TRDT;
-		public STRSubRecord NAM1_ResponseText;
-		public STRSubRecord NAM2_ScriptNotes;
-		public STRSubRecord NAM3_Edits;
-		public FormID SNAM_SpeakerAnim;
-		public FormID LNAM_ListenerAnim;
+		public INFO_TRDTSubrecord TRDT = new();
+		public STRSubRecord NAM1_ResponseText = new();
+		public STRSubRecord NAM2_ScriptNotes = new();
+		public STRSubRecord NAM3_Edits = new();
+		public FormID SNAM_SpeakerAnim = new();
+		public FormID LNAM_ListenerAnim = new();
 	}
 }

@@ -6,13 +6,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace Fallout.NET.TES4
+namespace Fallout.NET
 {
 	public enum GameID
 	{
-		Oblivion, Skyrim, Fallout3, FalloutNV, Fallout4
+		Marrowind, Oblivion, Skyrim, Fallout3, FalloutNV, Fallout4
 	}
+}
 
+namespace Fallout.NET.TES4
+{
 	public class TES4Master
 	{
 		private Dictionary<string, Group> _groups;
@@ -53,7 +56,7 @@ namespace Fallout.NET.TES4
 					//Stopwatch sw = Stopwatch.StartNew();
 					groupName = reader.ReadString(4);
 					group = new Group();
-					group.Deserialize(reader, groupName, gameID);
+					group.Deserialize(reader, groupName, gameID, null);
 
 					if (_groups.ContainsKey(group.Label))
 						continue;

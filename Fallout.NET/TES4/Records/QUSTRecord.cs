@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 
@@ -16,7 +17,7 @@ namespace Fallout.NET.TES4.Records
 		UnknownBit2 = 0x02,// 	??
 		AllowRepeatedConversationTopics = 0x04,
 		AllowRepeatedStages = 0x08,
-		UnknownBit5 = 0x10,// 	??
+		MaybeBarks = 0x10,// 	??
 	}
 
 	/// <summary>
@@ -24,7 +25,6 @@ namespace Fallout.NET.TES4.Records
 	/// </summary>
 	public class QUSTRecord : Record
 	{
-		public STRSubRecord EDID = new();
 		public FormID SCRI_Script = new();
 		public STRSubRecord FULL = new();
 		public FormID SCRI = new();
@@ -38,22 +38,26 @@ namespace Fallout.NET.TES4.Records
 		protected override void ExtractSubRecords(BetterReader reader, GameID gameID, uint size)
 		{
 			//reader.ReadBytes((int)size);
-			var bytes = reader.ReadBytes((int)size);
+			//var bytes = reader.ReadBytes((int)size);
+
+			var bytes = ArrayPool<byte>.Shared.Rent((int)size);
+			var ssize = reader.ReadBytes(new Span<byte>(bytes, 0, (int)size));
+
 			var name = string.Empty;
 
 			using (var stream = new BetterMemoryReader(bytes))
 			{
-				var end = stream.Length;
+				//var end = stream.Length;
 				int srsize;
 
-				while (stream.Position < end)
+				while (stream.Position < ssize)
 				{
 					name = stream.ReadString(4);
 
 					switch (name)
 					{
 						case "EDID":
-							EDID.Deserialize(stream, name);
+							EDID = STRSubRecord.Read(stream, name);
 							continue;
 						case "FULL":
 							FULL.Deserialize(stream, name);
@@ -180,68 +184,8 @@ namespace Fallout.NET.TES4.Records
 						}
 					}
 				}
-				if (stream.Position < end)
-				{
-					UnityEngine.Debug.Log($"Should be EOF {name}");
-				}
 
-				//while (stream.Position < end)
-				//{
-				//	name = stream.ReadString(4);
-
-				//	switch (name)
-				//	{
-				//		case "EDID":
-				//			EDID.Deserialize(stream, name);
-				//			break;
-				//		case "FULL":
-				//			FULL.Deserialize(stream, name);
-				//			break;
-				//		case "SCRI":
-				//			SCRI.Deserialize(stream, name);
-				//			break;
-				//		case "ICON":
-				//			ICON.Deserialize(stream, name);
-				//			break;
-				//		case "MICO":
-				//			MICO.Deserialize(stream, name);
-				//			break;
-				//		case "DATA":
-				//			srsize = stream.ReadUInt16();
-				//			UnityEngine.Debug.Assert(srsize == 8);
-				//			DATA_Flags = (QuestFlags)stream.ReadByte();
-				//			DATA_Priority = stream.ReadByte();
-				//			stream.ReadByte();
-				//			stream.ReadByte();
-				//			DATA_QuestDelay = stream.ReadSingle();
-				//			break;
-				//		case "CTDA":
-				//			CTDA_Conditions.Add(new CTDASubRecord());
-				//			CTDA_Conditions[CTDA_Conditions.Count - 1].Deserialize(stream, name);
-				//			break;
-				//		case "INDX":
-				//			Stages.Add(new());
-				//			Stages[Stages.Count - 1].Deserialize(stream, name);
-				//			break;
-				//		case "QSDT":
-				//			Stages[Stages.Count - 1].LogEntries.Add(new());
-				//			Stages[Stages.Count - 1].LogEntries[Stages[Stages.Count - 1].LogEntries.Count - 1].Deserialize(stream, name);
-				//			break;
-				//		case "QOBJ":
-				//			Objectives.Add(new());
-				//			Objectives[Objectives.Count - 1].Deserialize(stream, name);
-				//			break;
-				//		case "QSTA":
-				//			Objectives[Objectives.Count - 1].Targets.Add(new());
-				//			Objectives[Objectives.Count - 1].Targets[Objectives[Objectives.Count - 1].Targets.Count - 1].Deserialize(stream, name);
-				//			break;
-				//		default:
-				//			UnityEngine.Debug.Log($"Unknown QUST sub record {name}");
-				//			var rest = stream.ReadUInt16();
-				//			stream.ReadBytes(rest);
-				//			break;
-				//	}
-				//}
+				ArrayPool<byte>.Shared.Return(bytes);
 			}
 		}
 	}

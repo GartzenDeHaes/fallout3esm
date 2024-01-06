@@ -11,7 +11,6 @@ namespace Fallout.NET.TES4.Records
 	/// </summary>
 	public sealed class FLSTRecord : Record
 	{
-		public STRSubRecord EDID;
 		public List<FormID> FormIDs = new();
 
 		protected override void ExtractSubRecords(BetterReader reader, GameID gameID, uint size)
@@ -30,8 +29,7 @@ namespace Fallout.NET.TES4.Records
 					switch (name)
 					{
 						case "EDID":
-							EDID = new STRSubRecord();
-							EDID.Deserialize(stream, name);
+							EDID = STRSubRecord.Read(stream, name);
 							break;
 						case "LNAM":
 							FormIDs.Add(new FormID());

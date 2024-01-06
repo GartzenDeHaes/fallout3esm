@@ -5,9 +5,6 @@ using Portland.Mathmatics;
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-
-using UnityEngine;
 
 namespace Fallout.NET.TES4.SubRecords.INFO
 {

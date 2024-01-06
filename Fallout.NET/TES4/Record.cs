@@ -9,45 +9,83 @@ using UnityEngine;
 
 namespace Fallout.NET.TES4
 {
+	public enum RecordFlags : uint
+	{
+		ThePluginIsaMasterFile = 0x00000001,
+		Unknown1 = 0x00000002,
+		Unknown2 = 0x00000004,
+		Unknown3 = 0x00000008,
+		Unknown4 = 0x00000010,
+		Deleted = 0x00000020,
+		BorderRegion_HasTreeLOD_Constant_HiddenFromLocalMap = 0x00000040,
+		TurnOffFire = 0x00000080,
+		Inaccessible = 0x00000100,
+		CastsShadows_OnLocalMap_MotionBlur = 0x00000200,
+		QuestItem_PersistentReference = 0x00000400,
+		InitiallyDisabled = 0x00000800,
+		Ignored = 0x00001000,
+		NoVoiceFilter = 0x00002000,
+		Unknown5 = 0x00004000,
+		VisibleWhenDistant = 0x00008000,
+		RandomAnimStart_HighPriorityLOD = 0x00010000,
+		Dangerous_OfflimitsInteriorCell_RadioStationTalkingActivator = 0x00020000,
+		Compressed = 0x00040000,
+		CantWait_PlatformSpecificTexture = 0x00080000,
+		Unknown6 = 0x00100000,
+		Unknown7 = 0x00200000,
+		Unknown8 = 0x00400000,
+		Unknown9 = 0x00800000,
+		Unknown10 = 0x01000000,
+		Obstacle_NoAIAcquire = 0x02000000,
+		NavMeshGenerationFilter = 0x04000000,
+		NavMeshGenerationBoundingBox = 0x08000000,
+		NonPipboy_ReflectedByAutoWater = 0x10000000,
+		ChildCanUse_RefractedByAutoWater = 0x20000000,
+		NavMeshGenerationGround = 0x40000000,
+		Unknow11 = 0x80000000,
+	}
+
 	public class Record
 	{
 		public AsciiId4 Type;
 		uint dataSize;
-		protected uint flags;
-		protected uint id;
-		uint revision;
-		uint version;
-		uint unknow;
+		protected RecordFlags flags;
+		public uint FormId;
+		//uint revision;
+		//uint version;
+		//uint unknow;
 
 		protected byte[] data;
 
+		public string EDID { get; protected set; }
+
 		public bool Compressed
 		{
-			get { return (flags & 0x00040000) != 0; }
+			get { return ((uint)flags & 0x00040000) != 0; }
 		}
 
 		public bool Deleted
 		{
-			get { return (flags & 0x20) != 0; }
+			get { return ((uint)flags & 0x20) != 0; }
 		}
 
 		public bool Ignored
 		{
-			get { return (flags & 0x1000) != 0; }
+			get { return ((uint)flags & 0x1000) != 0; }
 		}
 
 		public void Deserialize(BetterReader reader, in AsciiId4 name, GameID gameID)
 		{
 			Type = name;
 			dataSize = reader.ReadUInt32();
-			flags = reader.ReadUInt32();
-			id = reader.ReadUInt32();
-			revision = reader.ReadUInt32();
+			flags = (RecordFlags)reader.ReadUInt32();
+			FormId = reader.ReadUInt32();
+			var revision = reader.ReadUInt32();
 
 			if (gameID != GameID.Oblivion)
 			{
-				version = reader.ReadUInt16();
-				unknow = reader.ReadUInt16();
+				var version = reader.ReadUInt16();
+				var unknow = reader.ReadUInt16();
 			}
 
 			if (Deleted)
@@ -86,12 +124,19 @@ namespace Fallout.NET.TES4
 				{
 					ExtractSubRecords(betterReader, gameId, (uint)betterReader.Length);
 				}
+				flags = (RecordFlags)((uint)flags & ~0x00040000);
+				UnityEngine.Debug.Assert(!Compressed);
 			}
 		}
 
 		protected virtual void ExtractSubRecords(BetterReader reader, GameID gameID, uint size)
 		{
 			reader.ReadBytes((int)size);
+		}
+
+		public virtual void NoteSubGroup(Group subGroup)
+		{
+			UnityEngine.Debug.Log($"Unhandled subgroup for {Type}");
 		}
 
 		private static byte[] Decompress(byte[] data)
@@ -125,14 +170,16 @@ namespace Fallout.NET.TES4
 				return new ACRERecord();
 			else if (name == "ACTI")
 				return new ACTIRecord();
+			else if (name == "ADDN")
+				return new ADDNRecord();
 			else if (name == "ALCH")
 				return new ALCHRecord();
 			else if (name == "AMMO")
 				return new AMMORecord();
 			else if (name == "ANIO")
 				return new ANIORecord();
-			else if (name == "APPA")
-				return new APPARecord();
+			else if (name == "ARMA")
+				return new ARMAARecord();
 			else if (name == "ASPC")
 				return new ASPCRecord();
 			else if (name == "ARMO")
@@ -141,8 +188,8 @@ namespace Fallout.NET.TES4
 				return new AVIFRecord();
 			else if (name == "BOOK")
 				return new BOOKRecord();
-			else if (name == "BSGN")
-				return new BSGNRecord();
+			//else if (name == "BSGN")
+			//	return new BSGNRecord();
 			else if (name == "CELL")
 				return new CELLRecord();
 			else if (name == "CLAS")
@@ -157,6 +204,8 @@ namespace Fallout.NET.TES4
 				return new CREARecord();
 			else if (name == "CSTY")
 				return new CSTYRecord();
+			else if (name == "DEBR")
+				return new DEBRRecord();
 			else if (name == "DIAL")
 				return new DIALRecord();
 			else if (name == "DOBJ")
@@ -175,8 +224,8 @@ namespace Fallout.NET.TES4
 				return new EYESRecord();
 			else if (name == "FACT")
 				return new FACTRecord();
-			else if (name == "FLOR")
-				return new FLORRecord();
+			//else if (name == "FLOR")
+			//	return new FLORRecord();
 			else if (name == "FLST")
 				return new FLSTRecord();
 			else if (name == "FURN")
@@ -189,6 +238,8 @@ namespace Fallout.NET.TES4
 				return new GRASRecord();
 			else if (name == "HAIR")
 				return new HAIRRecord();
+			else if (name == "IMAD")
+				return new IMADRecord();
 			else if (name == "IDLM")
 				return new IDLMRecord();
 			else if (name == "IDLE")
@@ -199,6 +250,10 @@ namespace Fallout.NET.TES4
 				return new INFORecord();
 			else if (name == "INGR")
 				return new INGRRecord();
+			else if (name == "IPCT")
+				return new IPCTRecord();
+			else if (name == "IPDS")
+				return new IPDSRecord();
 			else if (name == "KEYM")
 				return new KEYMRecord();
 			else if (name == "LAND")
@@ -215,8 +270,8 @@ namespace Fallout.NET.TES4
 				return new LVLIRecord();
 			else if (name == "LVLN")
 				return new LVLNRecord();
-			else if (name == "LVSP")
-				return new LVSPRecord();
+			//else if (name == "LVSP")
+			//	return new LVSPRecord();
 			else if (name == "MGEF")
 				return new MGEFRecord();
 			else if (name == "MICN")
@@ -235,34 +290,38 @@ namespace Fallout.NET.TES4
 				return new PACKRecord();
 			else if (name == "PERK")
 				return new PERKRecord();
-			else if (name == "PGRD")
-				return new PGRDRecord();
+			//else if (name == "PGRD")
+			//	return new PGRDRecord();
 			else if (name == "PGRE")
 				return new PGRERecord();
+			else if (name == "PROJ")
+				return new PROJRecord();
 			else if (name == "PWAT")
 				return new PWATRecord();
 			else if (name == "QUST")
 				return new QUSTRecord();
+			else if (name == "RADS")
+				return new RADSRecord();
 			else if (name == "RACE")
 				return new RACERecord();
 			else if (name == "REFR")
 				return new REFRRecord();
 			else if (name == "REGN")
 				return new REGNRecord();
-			else if (name == "ROAD")
-				return new ROADRecord();
-			else if (name == "SBSP")
-				return new SBSPRecord();
+			//else if (name == "ROAD")
+			//	return new ROADRecord();
+			//else if (name == "SBSP")
+			//	return new SBSPRecord();
 			else if (name == "SCOL")
 				return new SCOLRecord();
 			else if (name == "SCPT")
 				return new SCPTRecord();
-			else if (name == "SGST")
-				return new SGSTRecord();
-			else if (name == "SKIL")
-				return new SKILRecord();
-			else if (name == "SLGM")
-				return new SLGMRecord();
+			//else if (name == "SGST")
+			//	return new SGSTRecord();
+			//else if (name == "SKIL")
+			//	return new SKILRecord();
+			//else if (name == "SLGM")
+			//	return new SLGMRecord();
 			else if (name == "SOUN")
 				return new SOUNRecord();
 			else if (name == "SPEL")
@@ -279,6 +338,8 @@ namespace Fallout.NET.TES4
 				return new TREERecord();
 			else if (name == "TXST")
 				return new TXSTRecord();
+			else if (name == "VTYP")
+				return new VTYPRecord();
 			else if (name == "WATR")
 				return new WATRRecord();
 			else if (name == "WEAP")
@@ -289,9 +350,23 @@ namespace Fallout.NET.TES4
 				return new WTHRRecord();
 
 			// Nav Mesh, (tutorial) Message, Head Part, Body Part Data, Camera Shot, Camera Path, Lighting Template, Body Part Data
-			//if (name != "NAVM" && name != "MESG" && name != "HDPT" && name != "BPDT" && name != "CAMS" && name != "CPTH" && name != "LGTM" && name != "BPTD")
-			//	Debug.Log($"Unknow recored {name}");
-	
+			if 
+			(
+				name != "RGDL" && 
+				name != "NAVM" && 
+				name != "MESG" && 
+				name != "HDPT" && 
+				name != "BPDT" && 
+				name != "CAMS" && 
+				name != "CPTH" && 
+				name != "LGTM" && 
+				name != "BPTD" &&
+				name != "NAVI"
+			)
+			{ 
+				Debug.Log($"Unknow recored {name}"); 
+			}
+
 			return new Record();
 		}
 	}
